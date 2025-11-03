@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<style type="text/css">
+			:root {
+				touch-action: pan-x pan-y;
+				height: 100%;
+			}
+
+			h1 {
+				font-family: Arial, Helvetica, sans-serif;
+				color: #f00;
+				font-size: x-large;
+			}
+
+			p {
+				font-family: Arial, Helvetica, sans-serif;
+				color: #000;
+				font-size: small;
+			}
+
+			body {
+				background-color: #000;
+				text-align: center;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+			#bloctxt {
+				border-left-width: 5px;
+				border-left-style: solid;
+				border-left-color: #f00;
+				padding-left: 10px;
+				position: absolute;
+				left: 50%;
+				width: 600px;
+				margin-left: -260px;
+			}
+			#AdText {
+				z-index: 9999;
+				position: absolute;
+				color: #fff;
+				left: 0px;
+				bottom: 5%;
+				width: 100%;
+				font-size: calc(1em + 4vw);
+				font-family: 'font', sans-serif;
+				visibility: hidden;
+			}
+
+      #flashlight {
+				transition: filter 0.3s ease;
+			}
+
+			#flashlight.active {
+				filter: brightness(2);
+			}
+
+			#loader {
+				aspect-ratio: 1 / 1;
+				position: absolute;
+				top: calc(50% - 10%);
+				left: calc(50% - 5%);
+				transform: translate(-50%, -50%);
+				z-index: 9999;
+				border: 16px solid rgba(255, 255, 255, 0);
+				border-top: 16px solid white;
+				border-radius: 50%;
+				width: 10%;
+				/* height: 0; */
+				animation: spin 2s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+
+
+		<!-- Enables full-screen on iOS devices -->
+		<meta
+			name="viewport"
+			content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi"
+		/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="HandheldFriendly" content="true" />
+
+		<title>Clickteam Fusion Developer 2.5+ HTML5 Runtime</title>
+
+		<script>
+			// Detection of old browsers that do not support the canvas element
+			// Falls back to a default page
+			if (!document.createElement("canvas").getContext) {
+				window.open(
+					"http://www.clickteam.com/html5-fallback",
+					"_self",
+				);
+			}
+		</script>
+
+		<!-- EXTRASOURCES -->
+		<!-- Loads the Javascript code...-->
+		<script src="src/Runtime.js"></script>
+
+		<script>
+			// Detection of when the html file is ran locally.
+			// You can remove this code for the final version
+			if (window.location.protocol == "file:") {
+				document.write('<div id="bloctxt">');
+				document.write(
+					"<h1>The application cannot be run...</h1>",
+				);
+				document.write(
+					"<p>HTML browsers do not allow you to launch data files directly from the file system.<br>",
+				);
+				document.write(
+					"A drag & drop of the html file on a web-browser window will not work, on any machine.<br>",
+				);
+				document.write(
+					"Please use the Build & Run option (it opens a local web server) to run your application,<br>",
+				);
+				document.write(
+					"or upload your application folder to a remote web-server, and start it from there...</p>",
+				);
+				document.write("</div>");
+				throw new error("Cannot run application");
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="loader"></div>
+		<div
+		style="display: inline-block; -webkit-user-select: none; text-align: center; position: relative"
+		>
+		<a id="AdText" draggable="false">a</a>
+    <div
+				id="WASD"
+				style="position: absolute; top: 35%; left: 85%; width: 15%; z-index: 9999; visibility: hidden"
+			>
+				<img
+					src="resources/WASD.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+			<div
+				id="W"
+				style="position: absolute; top: 50%; left: 15%; width: 15%; z-index: 9999; visibility: hidden"
+			>
+				<img
+					src="resources/W.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+			<div
+				id="A"
+				style="position: absolute; top: 70%; left: 0%; width: 15%; z-index: 9999; visibility: hidden"
+			>
+				<img
+					src="resources/A.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+			<div
+				id="S"
+				style="position: absolute; top: 70%; left: 15%; width: 15%; z-index: 9999; visibility: hidden"
+			>
+				<img
+					src="resources/S.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+			<div
+				id="D"
+				style="position: absolute; top: 70%; left: 30%; width: 15%; z-index: 9999; visibility: hidden"
+			>
+				<img
+					src="resources/D.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+		<div
+				id="flashlight"
+				style="position: absolute; top: 3%; left: 40%; width: 20%; z-index: 9999; visibility: hidden; cursor: pointer;"
+			>
+				<img
+					src="resources/flashlight.webp"
+					style="pointer-events: none; width: 100%"
+				/>
+			</div>
+		<div id="radar" style="position: absolute; top: 17%; right: 5%; width: 28%; z-index: 9999; visibility: hidden;">
+			<img
+				src="resources/radar.webp"
+				style="pointer-events: none; width: 100%;"
+			/>
+		</div>
+		<div id="reveal" style="position: absolute; top: 85%; left: 67%; width: 24%; z-index: 9999; visibility: hidden;">
+			<img
+				src="resources/reveal/en.webp"
+				style="pointer-events: none; width: 100%;"
+			/>
+		</div>
+			<canvas id="MMFCanvas" width="1280" height="720">
+				Your browser does not support Canvas.
+			</canvas>
+		</div>
+
+		<script>
+
+async function loadFont() {
+        try {
+            // Создаём новый объект FontFace
+            const font = new FontFace('font', 'url(./resources/font.ttf) format("truetype")');
+            
+            // Загружаем шрифт
+            await font.load();
+            
+            // Добавляем шрифт в документ
+            document.fonts.add(font);
+            
+            console.log('Шрифт загружен и добавлен.');
+        } catch (e) {
+            console.error('Не удалось загрузить шрифт:', e);
+        }
+    }
+
+			// RUNTIMESTART
+			// This is where the HTML5 runtime is actually started
+			document.addEventListener('contextmenu', event => event.preventDefault());
+			window.addEventListener(
+				"load",
+				windowLoaded,
+				false,
+			);
+			async function windowLoaded() {
+				window.manifestPath = new URL(
+					"./resources/manifest.json",
+					location.href,
+				).href;
+				window.manifestAssets =
+					await (await fetch(window.manifestPath))
+						.json();
+
+				if (!window.ysdk) {
+					const ysdk = await YaGames.init();
+					window.ysdk = ysdk;
+				}
+				window.currentLanguage =
+					window.ysdk.environment.i18n.lang;
+
+				window.manifestLangPath = new URL(
+					'./resources/' + window.currentLanguage + '.json',
+					location.href,
+				).href;
+				window.manifestLang =
+					await (await fetch(window.manifestLangPath))
+						.json();
+
+				window.manifest = {
+					...window.manifestAssets,
+					...window.manifestLang,
+				}
+
+				await loadFont();
+
+				// Calls the runtimej
+				// First parameter : name of the canvas element
+				// Second parameter : path to the cch file. Images and sounds must lay beside this file
+				new Runtime("MMFCanvas", "resources/FNAF2.cch");
+			}
+			// RUNTIMESTARTEND
+		</script>
+	</body>
+</html>
