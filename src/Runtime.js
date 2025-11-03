@@ -1,5 +1,5 @@
 // CDN ekleme (dosyanın en üstüne eklenebilir)
-const CDN_BASE = "https://cdn.jsdelivr.net/gh/netclassroom/felek@main/";
+const CDN_BASE = "https://cdn.jsdelivr.net/gh/ertemr33/qaza@main/";
 const originalOpen = XMLHttpRequest.prototype.open;
 XMLHttpRequest.prototype.open = function(method, url, ...args) {
   if (url && url.startsWith("resources/")) {
